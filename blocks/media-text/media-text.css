@@ -1,0 +1,53 @@
+.media-text > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.media-text .media-text-image {
+  width: 100%;
+  line-height: 0;
+}
+
+.media-text .media-text-image picture,
+.media-text .media-text-image img {
+  width: 100%;
+  display: block;
+}
+
+.media-text .media-text-content {
+  width: 100%;
+}
+
+.media-text .media-text-content h1,
+.media-text .media-text-content h2,
+.media-text .media-text-content h3 {
+  margin-top: 0;
+}
+
+.media-text .media-text-content a:any-link {
+  font-weight: 500;
+}
+
+/* tablet and desktop: side-by-side */
+@media (width >= 900px) {
+  .media-text > div {
+    flex-direction: row;
+    gap: 48px;
+  }
+
+  .media-text .media-text-image,
+  .media-text .media-text-content {
+    flex: 1;
+  }
+
+  /* reverse variant: content first, image second */
+  .media-text.reverse .media-text-image {
+    order: 1;
+  }
+
+  .media-text.reverse .media-text-content {
+    order: 0;
+  }
+}
