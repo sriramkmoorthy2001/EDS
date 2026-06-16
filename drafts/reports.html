@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Reports Demo</title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <script type="module" src="/scripts/scripts.js"></script>
+  </head>
+  <body class="appear">
+    <header>
+      <!-- Static demo nav for local preview only. In da.live this is replaced by the /nav
+           fragment rendered through blocks/header/header.js — same markup, same classes. -->
+      <div class="header block" data-block-name="header" data-block-status="loaded">
+        <div class="nav-wrapper">
+          <nav id="nav" aria-expanded="false">
+            <div class="nav-hamburger">
+              <button type="button" aria-controls="nav" aria-label="Open navigation">
+                <span class="nav-hamburger-icon"></span>
+              </button>
+            </div>
+            <div class="nav-brand">
+              <p><a href="/">Acme Corp</a></p>
+            </div>
+            <div class="nav-sections">
+              <div class="default-content-wrapper">
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/reports">Reports</a></li>
+                  <li><a href="/about">About</a></li>
+                  <li><a href="/contact">Contact</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="nav-tools">
+              <p><a href="/login">Sign in</a></p>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div>
+        <h1>Reports</h1>
+        <p>Browse our latest financial, sustainability, and market reports. Use search or tags below to find what you need.</p>
+      </div>
+      <div>
+        <div class="reports">
+          <div>
+            <div>
+              <picture>
+                <img src="https://placehold.co/600x400?text=Q1" alt="Q1 financial summary chart" />
+              </picture>
+            </div>
+            <div>
+              <h3>Q1 Financial Summary</h3>
+              <p>An overview of revenue, expenses, and growth for the first quarter.</p>
+              <p>Date: 2026-01-15</p>
+              <p>Tag: Quarterly</p>
+              <p><a href="https://example.com/reports/q1-financial-summary.pdf">Download PDF</a></p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <picture>
+                <img src="https://placehold.co/600x400?text=Annual" alt="Annual report cover" />
+              </picture>
+            </div>
+            <div>
+              <h3>Annual Report 2025</h3>
+              <p>Full-year results, strategy highlights, and outlook for the coming year.</p>
+              <p>Date: 2025-12-20</p>
+              <p>Tag: Annual</p>
+              <p><a href="https://example.com/reports/annual-2025.pdf">Download PDF</a></p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <picture>
+                <img src="https://placehold.co/600x400?text=Sustainability" alt="Sustainability report cover" />
+              </picture>
+            </div>
+            <div>
+              <h3>Sustainability Report</h3>
+              <p>Progress on environmental and social commitments for the year.</p>
+              <p>Date: 2025-11-05</p>
+              <p>Tag: Sustainability</p>
+              <p><a href="https://example.com/reports/sustainability.pdf">Download PDF</a></p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <picture>
+                <img src="https://placehold.co/600x400?text=Q2" alt="Q2 financial summary chart" />
+              </picture>
+            </div>
+            <div>
+              <h3>Q2 Financial Summary</h3>
+              <p>Revenue and expense trends for the second quarter.</p>
+              <p>Date: 2026-04-10</p>
+              <p>Tag: Quarterly</p>
+              <p><a href="https://example.com/reports/q2-financial-summary.pdf">Download PDF</a></p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <picture>
+                <img src="https://placehold.co/600x400?text=Market" alt="Market analysis report cover" />
+              </picture>
+            </div>
+            <div>
+              <h3>Market Analysis</h3>
+              <p>Competitive landscape and market trends affecting the business.</p>
+              <p><a href="https://example.com/reports/market-analysis.pdf">Download PDF</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <!-- Static demo footer for local preview only. In da.live this is replaced by the /footer
+           fragment rendered through blocks/footer/footer.js — same markup, same classes. -->
+      <div class="footer block" data-block-name="footer" data-block-status="loaded">
+        <div>
+          <div>
+            <h2>Acme Corp</h2>
+            <p>Insights and reports for our community.</p>
+          </div>
+          <div>
+            <h3>Reports</h3>
+            <ul>
+              <li><a href="/reports">All reports</a></li>
+              <li><a href="/reports#quarterly">Quarterly</a></li>
+              <li><a href="/reports#annual">Annual</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Company</h3>
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Legal</h3>
+            <ul>
+              <li><a href="/privacy">Privacy</a></li>
+              <li><a href="/terms">Terms</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

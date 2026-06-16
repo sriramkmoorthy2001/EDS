@@ -18,6 +18,16 @@
   --text-color: #131313;
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
+  --accent-color: #0f9d8b;
+  --accent-color-light: #e3f5f2;
+
+  /* radius */
+  --radius-s: 6px;
+  --radius-m: 12px;
+
+  /* shadow */
+  --shadow-s: 0 1px 4px rgb(0 0 0 / 8%);
+  --shadow-m: 0 8px 24px rgb(0 0 0 / 12%);
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;

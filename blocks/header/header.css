@@ -4,6 +4,8 @@ header .nav-wrapper {
   width: 100%;
   z-index: 2;
   position: fixed;
+  box-shadow: var(--shadow-s);
+  transition: box-shadow 0.2s ease;
 }
 
 header nav {
@@ -146,6 +148,7 @@ header .nav-brand {
   font-size: var(--heading-font-size-s);
   font-weight: 700;
   line-height: 1;
+  letter-spacing: -0.01em;
 }
 
 header nav .nav-brand img {
@@ -194,6 +197,16 @@ header nav .nav-sections ul > li > ul > li {
 
   header nav[aria-expanded='true'] .nav-sections {
     align-self: unset;
+  }
+
+  header nav .nav-sections ul > li {
+    border-radius: var(--radius-s);
+    transition: color 0.15s ease;
+  }
+
+  header nav .nav-sections ul > li:hover,
+  header nav .nav-sections ul > li:focus-within {
+    color: var(--accent-color);
   }
 
   header nav .nav-sections .nav-drop {
@@ -245,7 +258,9 @@ header nav .nav-sections ul > li > ul > li {
     width: 200px;
     top: 150%;
     padding: 16px;
+    border-radius: var(--radius-m);
     background-color: var(--light-color);
+    box-shadow: var(--shadow-m);
     white-space: initial;
   }
 
