@@ -30,6 +30,12 @@
   font-weight: 500;
 }
 
+/* auto-append chevron arrow after every link in the content cell */
+.media-text .media-text-content a::after {
+  content: ' ›';
+  font-style: normal;
+}
+
 /* tablet and desktop: side-by-side */
 @media (width >= 900px) {
   .media-text > div {
