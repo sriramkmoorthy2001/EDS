@@ -1,8 +1,10 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 /**
- * Splits a body cell into logical lines. Handles both authoring styles:
- * separate <p>/<h*> elements, or a single block with <br>-separated text.
+ * Splits a body cell into logical lines, regardless of whether the author's
+ * editor produced separate <p>/<h*> elements or wrapped everything in one
+ * element with <br> line breaks (descends into block elements so inner
+ * <br>s still split correctly).
  * @param {Element} bodyCell The body cell element
  * @returns {Element[]} One wrapper element per line, in document order
  */
@@ -10,25 +12,27 @@ function getLines(bodyCell) {
   const lines = [];
   let buffer = [];
   const flush = () => {
-    if (buffer.length) {
-      const wrapper = document.createElement('div');
-      buffer.forEach((node) => wrapper.append(node.cloneNode(true)));
-      lines.push(wrapper);
-      buffer = [];
-    }
+    const wrapper = document.createElement('div');
+    buffer.forEach((node) => wrapper.append(node.cloneNode(true)));
+    if (wrapper.textContent.trim() || wrapper.querySelector('a')) lines.push(wrapper);
+    buffer = [];
   };
-  bodyCell.childNodes.forEach((node) => {
+  const isBlock = (node) => node.nodeType === Node.ELEMENT_NODE
+    && /^(P|H1|H2|H3|H4|H5|H6|DIV)$/.test(node.nodeName);
+  const walk = (node) => {
     if (node.nodeName === 'BR') {
       flush();
-    } else if (node.nodeType === Node.ELEMENT_NODE && /^(P|H1|H2|H3|H4|H5|H6)$/.test(node.nodeName)) {
+    } else if (isBlock(node)) {
       flush();
-      lines.push(node.cloneNode(true));
+      [...node.childNodes].forEach(walk);
+      flush();
     } else {
       buffer.push(node);
     }
-  });
+  };
+  [...bodyCell.childNodes].forEach(walk);
   flush();
-  return lines.filter((line) => line.textContent.trim() || line.querySelector('a'));
+  return lines;
 }
 
 /**
