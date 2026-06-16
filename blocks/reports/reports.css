@@ -1,8 +1,35 @@
+@keyframes reports-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body:has(.reports) {
+  background: linear-gradient(180deg, #f5e9d3 0%, #faf3e3 45%, #faf3e3 100%);
+}
+
+body:has(.reports) footer {
+  background-color: #faf3e3;
+}
+
+body:has(.reports) main > .section:first-of-type h1,
+body:has(.reports) main > .section:first-of-type p {
+  animation: reports-fade-up 0.6s ease both;
+}
+
 .reports-toolbar {
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
+  animation: reports-fade-up 0.6s ease both;
+  animation-delay: 0.1s;
 }
 
 .reports-search {
@@ -77,12 +104,22 @@
   background-color: var(--background-color);
   box-shadow: var(--shadow-s);
   overflow: hidden;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  animation: reports-fade-up 0.5s ease both;
 }
+
+.reports-card:nth-child(1) { animation-delay: 0.05s; }
+.reports-card:nth-child(2) { animation-delay: 0.1s; }
+.reports-card:nth-child(3) { animation-delay: 0.15s; }
+.reports-card:nth-child(4) { animation-delay: 0.2s; }
+.reports-card:nth-child(5) { animation-delay: 0.25s; }
+.reports-card:nth-child(6) { animation-delay: 0.3s; }
+.reports-card:nth-child(7) { animation-delay: 0.35s; }
+.reports-card:nth-child(8) { animation-delay: 0.4s; }
 
 .reports-card:hover {
   box-shadow: var(--shadow-m);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .reports-card[hidden] {
@@ -91,12 +128,18 @@
 
 .reports-card-image {
   line-height: 0;
+  overflow: hidden;
 }
 
 .reports-card-image img {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.reports-card:hover .reports-card-image img {
+  transform: scale(1.06);
 }
 
 .reports-card-body {
@@ -124,6 +167,10 @@
 
 .reports-card-description {
   flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
   margin: 0;
   font-size: var(--body-font-size-xs);
   color: var(--dark-color);
