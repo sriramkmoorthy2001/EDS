@@ -1,40 +1,80 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 /**
- * Builds a report record from one authored row.
- * Expected body cell content, in order: heading, description paragraph,
- * a "Date:" paragraph, a "Tag:" paragraph, and a link. Date/tag are optional.
+ * Splits a body cell into logical lines. Handles both authoring styles:
+ * separate <p>/<h*> elements, or a single block with <br>-separated text.
+ * @param {Element} bodyCell The body cell element
+ * @returns {Element[]} One wrapper element per line, in document order
+ */
+function getLines(bodyCell) {
+  const lines = [];
+  let buffer = [];
+  const flush = () => {
+    if (buffer.length) {
+      const wrapper = document.createElement('div');
+      buffer.forEach((node) => wrapper.append(node.cloneNode(true)));
+      lines.push(wrapper);
+      buffer = [];
+    }
+  };
+  bodyCell.childNodes.forEach((node) => {
+    if (node.nodeName === 'BR') {
+      flush();
+    } else if (node.nodeType === Node.ELEMENT_NODE && /^(P|H1|H2|H3|H4|H5|H6)$/.test(node.nodeName)) {
+      flush();
+      lines.push(node.cloneNode(true));
+    } else {
+      buffer.push(node);
+    }
+  });
+  flush();
+  return lines.filter((line) => line.textContent.trim() || line.querySelector('a'));
+}
+
+/**
+ * Builds a report record from one authored row. The body cell's first line
+ * is always the title; remaining lines are matched by a "Date:"/"Tag:"
+ * prefix, a link, or otherwise treated as description text.
  * @param {Element} row The row element
  * @returns {{title: string, description: string, date: string, tag: string,
- *   link: string, linkText: string, picture: Element, element: Element}}
+ *   link: string, linkText: string, picture: Element}}
  */
 function parseReportRow(row) {
   const [imageCell, bodyCell] = row.children;
   const picture = imageCell?.querySelector('picture') || null;
 
-  const heading = bodyCell.querySelector('h1, h2, h3, h4, h5, h6');
-  const title = heading?.textContent.trim() || '';
+  const lines = getLines(bodyCell);
+  const [titleLine, ...rest] = lines;
+  const title = titleLine?.textContent.trim() || '';
 
-  const paragraphs = [...bodyCell.querySelectorAll('p')].filter((p) => !p.querySelector('a'));
   let date = '';
   let tag = '';
+  let link = '';
+  let linkText = '';
   const descriptionParts = [];
-  paragraphs.forEach((p) => {
-    const text = p.textContent.trim();
-    if (/^date:/i.test(text)) date = text.replace(/^date:\s*/i, '');
-    else if (/^tag:/i.test(text)) tag = text.replace(/^tag:\s*/i, '');
-    else descriptionParts.push(text);
-  });
 
-  const linkEl = bodyCell.querySelector('a[href]');
+  rest.forEach((line) => {
+    const linkEl = line.querySelector('a[href]');
+    const text = line.textContent.trim();
+    if (linkEl) {
+      link = linkEl.href;
+      linkText = linkEl.textContent.trim() || 'View report';
+    } else if (/^date:/i.test(text)) {
+      date = text.replace(/^date:\s*/i, '');
+    } else if (/^tag:/i.test(text)) {
+      tag = text.replace(/^tag:\s*/i, '');
+    } else if (text) {
+      descriptionParts.push(text);
+    }
+  });
 
   return {
     title,
     description: descriptionParts.join(' '),
     date,
     tag: tag || 'Uncategorized',
-    link: linkEl?.href || '',
-    linkText: linkEl?.textContent.trim() || 'View report',
+    link,
+    linkText: linkText || 'View report',
     picture,
   };
 }
