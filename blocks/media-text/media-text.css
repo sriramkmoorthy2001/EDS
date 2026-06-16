@@ -28,6 +28,12 @@
 
 .media-text .media-text-content a:any-link {
   font-weight: 500;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.media-text .media-text-content a:hover {
+  text-decoration: underline;
 }
 
 /* auto-append chevron arrow after every link in the content cell */
