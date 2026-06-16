@@ -110,8 +110,8 @@
 .reports-card-tag {
   align-self: flex-start;
   border-radius: 999px;
-  background-color: var(--accent-color-light);
-  color: var(--accent-color);
+  background-color: #ffb900;
+  color: #1a1a1a;
   padding: 0.2em 0.8em;
   font-size: var(--body-font-size-xs);
   font-weight: 600;
