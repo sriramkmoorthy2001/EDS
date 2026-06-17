@@ -7,7 +7,7 @@ export default function decorate(block) {
   block.textContent = '';
 
   const inner = document.createElement('div');
-  inner.className = 'cta-inner';
+  inner.className = 'cta-inner rise';
 
   if (heading) {
     const h2 = document.createElement('h2');

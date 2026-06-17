@@ -16,7 +16,7 @@ export default function decorate(block) {
   block.textContent = '';
 
   const wrap = document.createElement('div');
-  wrap.className = 'compare-wrap';
+  wrap.className = 'compare-wrap rise';
   wrap.innerHTML = `
     <div class="compare-col compare-col-std">
       <span class="compare-badge compare-badge-std">Standard AEM</span>

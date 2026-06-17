@@ -75,7 +75,7 @@ export default function decorate(block) {
     ${ctaLink ? `<a href="${ctaLink.href}" class="spotlight-btn">${ctaLink.textContent} →</a>` : ''}`;
 
   const inner = document.createElement('div');
-  inner.className = 'spotlight-inner';
+  inner.className = 'spotlight-inner rise';
   inner.append(mockup, textCol);
   block.append(inner);
 

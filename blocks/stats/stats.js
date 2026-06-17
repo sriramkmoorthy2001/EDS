@@ -12,9 +12,10 @@ export default function decorate(block) {
   const grid = document.createElement('div');
   grid.className = 'stats-grid';
 
-  items.forEach(({ value, label }) => {
+  items.forEach(({ value, label }, i) => {
     const item = document.createElement('div');
-    item.className = 'stats-item';
+    item.className = 'stats-item rise';
+    item.style.transitionDelay = `${i * 80}ms`;
     item.innerHTML = `<div class="stats-value">${value}</div><div class="stats-label">${label}</div>`;
     grid.append(item);
   });

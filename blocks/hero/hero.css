@@ -64,26 +64,26 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.hero-btn-primary {
+a.hero-btn-primary {
   background: #0078d4;
   color: #fff;
   border-color: #0078d4;
 }
 
-.hero-btn-primary:hover {
+a.hero-btn-primary:hover {
   background: #106ebe;
   border-color: #106ebe;
   text-decoration: none;
   color: #fff;
 }
 
-.hero-btn-outline {
+a.hero-btn-outline {
   background: transparent;
   color: #1a1a1a;
   border-color: #d0d0d0;
 }
 
-.hero-btn-outline:hover {
+a.hero-btn-outline:hover {
   border-color: #0078d4;
   color: #0078d4;
   background: #eff6fc;

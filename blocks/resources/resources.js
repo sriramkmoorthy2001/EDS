@@ -17,9 +17,10 @@ export default function decorate(block) {
 
   cards.forEach(({
     title, desc, href, linkText,
-  }) => {
+  }, i) => {
     const card = document.createElement('div');
-    card.className = 'resources-card';
+    card.className = 'resources-card rise';
+    card.style.transitionDelay = `${i * 80}ms`;
     card.innerHTML = `
       <div class="resources-card-body">
         <h3>${title}</h3>

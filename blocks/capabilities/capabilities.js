@@ -21,9 +21,10 @@ export default function decorate(block) {
   const grid = document.createElement('div');
   grid.className = 'capabilities-grid';
 
-  cards.forEach(({ picture, title, desc }) => {
+  cards.forEach(({ picture, title, desc }, i) => {
     const card = document.createElement('div');
-    card.className = 'capabilities-card';
+    card.className = 'capabilities-card rise';
+    card.style.transitionDelay = `${i * 70}ms`;
 
     const bg = document.createElement('div');
     bg.className = 'capabilities-card-bg';

@@ -56,26 +56,26 @@
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
-.cta-btn-white {
+a.cta-btn-white {
   background: #fff;
   color: #1a1a1a;
   border-color: #fff;
 }
 
-.cta-btn-white:hover {
+a.cta-btn-white:hover {
   background: #f0f0f0;
   border-color: #f0f0f0;
   color: #1a1a1a;
   text-decoration: none;
 }
 
-.cta-btn-outline {
+a.cta-btn-outline {
   background: transparent;
   color: #fff;
   border-color: rgb(255 255 255 / 40%);
 }
 
-.cta-btn-outline:hover {
+a.cta-btn-outline:hover {
   background: rgb(255 255 255 / 12%);
   border-color: rgb(255 255 255 / 80%);
   color: #fff;
