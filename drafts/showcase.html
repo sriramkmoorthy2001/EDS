@@ -1,0 +1,1966 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AEM Platform Capabilities</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --font:
+          "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, sans-serif;
+
+        /* Microsoft-style palette */
+        --blue: #0078d4;
+        --blue-dark: #106ebe;
+        --blue-light: #eff6fc;
+        --blue-border: #c7e0f4;
+
+        /* teal accent — Microsoft secondary palette */
+        --teal: #00b7c3;
+        --teal-light: #e6f7f8;
+
+        --text: #1a1a1a;
+        --text-muted: #616161;
+        --border: #d0d0d0;
+        --border-light: #e8e8e8;
+        --bg: #ffffff;
+        --bg-gray: #f5f5f5;
+        --bg-dark: #1a1a1a;
+
+        --radius-s: 4px;
+        --radius-m: 8px;
+        --max: 1160px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font);
+        color: var(--text);
+        background: var(--bg);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      @media (min-width: 900px) {
+        .wrap {
+          padding: 0 48px;
+        }
+      }
+
+      /* ─── Scroll animations ─── */
+      .rise {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .rise.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .d1 {
+        transition-delay: 0.07s;
+      }
+      .d2 {
+        transition-delay: 0.14s;
+      }
+      .d3 {
+        transition-delay: 0.21s;
+      }
+      .d4 {
+        transition-delay: 0.28s;
+      }
+
+      /* ─── NAV ─── */
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border-light);
+        height: 60px;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 24px;
+      }
+
+      .nav-brand {
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+      }
+
+      .nav-brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--blue);
+        display: inline-block;
+      }
+
+      .nav-links {
+        display: none;
+        list-style: none;
+        gap: 28px;
+      }
+
+      @media (min-width: 900px) {
+        .nav-links {
+          display: flex;
+        }
+      }
+
+      .nav-links a {
+        font-size: 14px;
+        color: var(--text-muted);
+        transition: color 0.15s;
+        font-weight: 500;
+      }
+
+      .nav-links a:hover {
+        color: var(--blue);
+      }
+
+      .nav-cta {
+        background: var(--blue);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 7px 18px;
+        border-radius: var(--radius-s);
+        transition: background 0.15s;
+        white-space: nowrap;
+      }
+
+      .nav-cta:hover {
+        background: var(--blue-dark);
+      }
+
+      /* ─── HERO ─── */
+      .hero {
+        padding: 72px 0 64px;
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .hero-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+
+      @media (min-width: 900px) {
+        .hero-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 16px;
+      }
+
+      .hero-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 2px;
+        background: var(--blue);
+        border-radius: 2px;
+      }
+
+      .hero h1 {
+        font-size: clamp(32px, 4.5vw, 54px);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.022em;
+        margin-bottom: 18px;
+        color: var(--text);
+      }
+
+      .hero h1 strong {
+        color: var(--blue);
+        font-weight: 700;
+      }
+
+      .hero-desc {
+        font-size: 17px;
+        color: var(--text-muted);
+        max-width: 480px;
+        line-height: 1.75;
+        margin-bottom: 32px;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border-radius: var(--radius-s);
+        font: 600 15px/1 var(--font);
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          color 0.15s;
+        text-decoration: none;
+      }
+
+      .btn-blue {
+        background: var(--blue);
+        color: #fff;
+        border-color: var(--blue);
+      }
+      .btn-blue:hover {
+        background: var(--blue-dark);
+        border-color: var(--blue-dark);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .btn-outline:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+        background: var(--blue-light);
+      }
+
+      .btn-outline-light {
+        background: transparent;
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+      .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.8);
+        color: #fff;
+      }
+
+      .btn-white {
+        background: #fff;
+        color: var(--text);
+        border-color: #fff;
+      }
+      .btn-white:hover {
+        background: #f0f0f0;
+        border-color: #f0f0f0;
+      }
+
+      /* Hero visual panel */
+      .hero-visual {
+        display: none;
+      }
+
+      @media (min-width: 900px) {
+        .hero-visual {
+          display: block;
+        }
+      }
+
+      .visual-window {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-m);
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      .visual-titlebar,
+      .sp-titlebar {
+        background: #f3f3f3;
+        border-bottom: 1px solid var(--border-light);
+        padding: 0 0 0 12px;
+        display: flex;
+        align-items: center;
+        height: 32px;
+      }
+
+      .visual-tab-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 500;
+        flex: 1;
+      }
+
+      .visual-tab-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        background: var(--blue);
+        flex-shrink: 0;
+      }
+
+      .win-controls {
+        display: flex;
+        align-self: stretch;
+      }
+
+      .win-btn {
+        width: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: var(--text-muted);
+        transition: background 0.1s;
+        cursor: default;
+        user-select: none;
+      }
+
+      .win-btn:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      .win-close:hover {
+        background: #c42b1c;
+        color: #fff;
+      }
+
+      .visual-bar {
+        background: var(--bg);
+        border-bottom: 1px solid var(--border-light);
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .visual-url {
+        flex: 1;
+        background: var(--bg-gray);
+        border: 1px solid var(--border-light);
+        border-radius: 999px;
+        padding: 5px 14px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .visual-body {
+        padding: 16px;
+      }
+
+      .visual-heading-block {
+        margin-bottom: 14px;
+      }
+
+      .visual-h {
+        height: 10px;
+        border-radius: 3px;
+        background: #d0d0d0;
+        margin-bottom: 6px;
+      }
+      .visual-h.lg {
+        width: 70%;
+        height: 14px;
+      }
+      .visual-h.md {
+        width: 50%;
+        height: 9px;
+      }
+      .visual-h.sm {
+        width: 35%;
+        height: 7px;
+        background: #e8e8e8;
+      }
+
+      .visual-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .visual-search {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 10px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+        max-width: 140px;
+      }
+
+      .visual-chip {
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        padding: 3px 9px;
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .visual-chip.on {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .visual-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .visual-card {
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .visual-card-img {
+        height: 44px;
+        position: relative;
+      }
+
+      .visual-card-img-fill {
+        position: absolute;
+        inset: 0;
+      }
+
+      .visual-card-tag {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: var(--blue-light);
+        border-radius: 3px;
+        font-size: 8px;
+        font-weight: 700;
+        padding: 1px 5px;
+        color: var(--blue);
+      }
+
+      .visual-card-body {
+        padding: 7px;
+      }
+
+      .visual-line {
+        height: 5px;
+        border-radius: 3px;
+        background: #e8e8e8;
+        margin-bottom: 4px;
+      }
+
+      .visual-line.short {
+        width: 60%;
+      }
+
+      /* ─── STATS ─── */
+      .stats-bar {
+        background: var(--blue);
+        padding: 48px 0;
+        color: #fff;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+        text-align: center;
+      }
+
+      @media (min-width: 700px) {
+        .stats-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .stat-divider {
+        border: none;
+        display: none;
+      }
+
+      @media (min-width: 700px) {
+        .stats-grid {
+          position: relative;
+        }
+      }
+
+      .stat-number {
+        font-size: 46px;
+        font-weight: 300;
+        line-height: 1;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+
+      .stat-number strong {
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .stat-label {
+        font-size: 13px;
+        color: rgba(255 255 255 / 80%);
+        font-weight: 500;
+        max-width: 140px;
+        margin: 0 auto;
+      }
+
+      /* ─── SECTION BASICS ─── */
+      .section {
+        padding: 72px 0;
+      }
+      .section-gray {
+        background: var(--bg-gray);
+      }
+
+      .section-eyebrow {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 12px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(24px, 2.8vw, 36px);
+        font-weight: 700;
+        letter-spacing: -0.018em;
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+
+      .section-head p {
+        font-size: 16px;
+        color: var(--text-muted);
+        max-width: 560px;
+        line-height: 1.7;
+      }
+
+      .section-head {
+        margin-bottom: 44px;
+      }
+
+      /* ─── CAPABILITY CARDS ─── */
+      .cap-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      @media (min-width: 600px) {
+        .cap-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 900px) {
+        .cap-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .cap-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-m);
+        min-height: 230px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        transition: transform 0.2s;
+      }
+
+      .cap-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .cap-card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.45s ease;
+      }
+
+      .cap-card:hover .cap-card-bg {
+        transform: scale(1.06);
+      }
+
+      .cap-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.05) 0%,
+          rgba(0, 0, 0, 0.6) 50%,
+          rgba(0, 0, 0, 0.82) 100%
+        );
+      }
+
+      .cap-card-content {
+        position: relative;
+        z-index: 1;
+        padding: 22px;
+      }
+
+      .cap-card h3 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #fff;
+      }
+      .cap-card p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+      }
+
+      /* ─── COMPARE ─── */
+      .compare-wrap {
+        display: grid;
+        grid-template-columns: 1fr;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-m);
+        overflow: hidden;
+      }
+
+      @media (min-width: 900px) {
+        .compare-wrap {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .compare-col {
+        padding: 40px;
+      }
+
+      .compare-col.std {
+        background: var(--bg-gray);
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      @media (min-width: 900px) {
+        .compare-col.std {
+          border-bottom: none;
+          border-right: 1px solid var(--border-light);
+        }
+      }
+
+      .compare-col.plus {
+        background: var(--bg);
+      }
+
+      .compare-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 16px;
+      }
+
+      .compare-label.std-label {
+        background: #e0e0e0;
+        color: #616161;
+      }
+      .compare-label.plus-label {
+        background: var(--blue-light);
+        color: var(--blue);
+        border: 1px solid var(--blue-border);
+      }
+
+      .compare-col h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .compare-col > p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+      }
+
+      .item-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .item-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .item-list li .icon-wrap {
+        flex-shrink: 0;
+        margin-top: 1px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .item-list.std li .icon-wrap {
+        background: #d8d8d8;
+      }
+      .item-list.std li .icon-wrap svg {
+        stroke: #616161;
+      }
+      .item-list.plus li .icon-wrap {
+        background: var(--blue);
+      }
+      .item-list.plus li .icon-wrap svg {
+        stroke: #fff;
+      }
+
+      /* ─── SPOTLIGHT ─── */
+      .spotlight-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 56px;
+        align-items: center;
+      }
+
+      @media (min-width: 900px) {
+        .spotlight-grid {
+          grid-template-columns: 3fr 2fr;
+        }
+      }
+
+      .spotlight-visual {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-m);
+        overflow: hidden;
+      }
+
+      .sp-header {
+        background: var(--bg-gray);
+        border-bottom: 1px solid var(--border-light);
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sp-search {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 11px;
+        color: var(--text-muted);
+        background: var(--bg);
+        flex: 1;
+        max-width: 180px;
+      }
+
+      .sp-chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .sp-chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .sp-chip.on {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .sp-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 14px;
+        background: var(--bg);
+      }
+
+      .sp-card {
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .sp-img {
+        height: 56px;
+        position: relative;
+      }
+
+      .sp-fill {
+        position: absolute;
+        inset: 0;
+      }
+
+      .sp-badge {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        background: var(--blue-light);
+        border-radius: 4px;
+        font-size: 8px;
+        font-weight: 700;
+        padding: 2px 6px;
+        color: var(--blue);
+      }
+
+      .sp-body {
+        padding: 8px;
+      }
+      .sp-line {
+        height: 6px;
+        background: #e8e8e8;
+        border-radius: 3px;
+        margin-bottom: 4px;
+      }
+      .sp-line.s {
+        width: 55%;
+        height: 5px;
+      }
+      .sp-line.xs {
+        width: 70%;
+        height: 4px;
+        background: #f0f0f0;
+      }
+
+      .sp-pager {
+        border-top: 1px solid var(--border-light);
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        background: var(--bg);
+      }
+
+      .sp-pg {
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .sp-pg.on {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      /* spotlight text */
+      .spotlight-text .section-eyebrow {
+        display: block;
+      }
+      .spotlight-text h2 {
+        font-size: clamp(22px, 2.5vw, 32px);
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        line-height: 1.2;
+        margin-bottom: 14px;
+      }
+      .spotlight-text p {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 20px;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 24px;
+      }
+
+      .pill {
+        background: var(--blue-light);
+        color: var(--blue);
+        border: 1px solid var(--blue-border);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 11px;
+        border-radius: 999px;
+      }
+
+      /* ─── RESOURCE CARDS ─── */
+      .res-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      @media (min-width: 600px) {
+        .res-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 900px) {
+        .res-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .res-card {
+        position: relative;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-m);
+        overflow: hidden;
+        background: var(--bg);
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .res-card::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 120, 212, 0.08),
+          transparent
+        );
+        transition: height 0.35s ease;
+        pointer-events: none;
+      }
+
+      .res-card:hover {
+        border-color: var(--blue);
+        transform: translateY(-2px);
+      }
+
+      .res-card:hover::before {
+        height: 100%;
+      }
+
+      .res-card-body {
+        position: relative;
+        z-index: 1;
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .res-card-type {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+
+      .res-card h3 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        line-height: 1.35;
+      }
+      .res-card p {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        flex: 1;
+        margin-bottom: 16px;
+      }
+
+      .res-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--blue);
+        transition: gap 0.15s;
+      }
+
+      .res-link:hover {
+        gap: 10px;
+      }
+      .res-link svg {
+        flex-shrink: 0;
+      }
+
+      /* ─── CTA ─── */
+      .cta-section {
+        background: var(--bg-dark);
+        color: #fff;
+        padding: 80px 0;
+        text-align: center;
+      }
+
+      .cta-section h2 {
+        font-size: clamp(26px, 3vw, 40px);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 14px;
+      }
+
+      .cta-section p {
+        font-size: 16px;
+        color: rgba(255 255 255 / 65%);
+        max-width: 480px;
+        margin: 0 auto 36px;
+        line-height: 1.7;
+      }
+
+      /* ─── FOOTER ─── */
+      .site-footer {
+        background: var(--bg-gray);
+        border-top: 1px solid var(--border-light);
+        padding: 28px 0;
+      }
+
+      .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .footer-brand {
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .footer-note {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+        list-style: none;
+      }
+      .footer-links a {
+        font-size: 12px;
+        color: var(--text-muted);
+        transition: color 0.15s;
+      }
+      .footer-links a:hover {
+        color: var(--blue);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ── NAV ── -->
+    <nav class="site-nav">
+      <div class="wrap">
+        <div class="nav-row">
+          <a href="/" class="nav-brand">
+            <span class="nav-brand-dot"></span>
+            Reports Platform
+          </a>
+          <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#capabilities">Capabilities</a></li>
+            <li><a href="#resources">Resources</a></li>
+          </ul>
+          <a href="/reports" class="nav-cta">View Reports →</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-inner">
+          <div>
+            <h1 class="rise d1">
+              The AEM Platform,<br /><strong>Extended Your Way</strong>
+            </h1>
+            <p class="hero-desc rise d2">
+              AEM Edge Delivery Services ships with everything you need to run a
+              fast, author-friendly website. Add custom blocks and it becomes a
+              fully branded, interactive experience — no build pipeline
+              required.
+            </p>
+            <div class="btn-row rise d3">
+              <a href="/reports" class="btn btn-blue">
+                Explore Reports Page
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+              <a href="#capabilities" class="btn btn-outline"
+                >See What We Built</a
+              >
+            </div>
+          </div>
+
+          <!-- Browser UI mockup -->
+          <div class="hero-visual rise d2">
+            <div class="visual-window">
+              <div class="visual-titlebar">
+                <div class="visual-tab-label">
+                  <div class="visual-tab-dot"></div>
+                  EDS Reports
+                </div>
+                <div class="win-controls">
+                  <div class="win-btn">&#x2013;</div>
+                  <div class="win-btn">&#x25A1;</div>
+                  <div class="win-btn win-close">&#x2715;</div>
+                </div>
+              </div>
+              <div class="visual-bar">
+                <div class="visual-url">
+                  main--eds--sriramkmoorthy2001.aem.live/reports
+                </div>
+              </div>
+              <div class="visual-body">
+                <div class="visual-heading-block">
+                  <div class="visual-h lg"></div>
+                  <div class="visual-h md"></div>
+                  <div class="visual-h sm"></div>
+                </div>
+                <div class="visual-toolbar">
+                  <div class="visual-search">
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    Search reports…
+                  </div>
+                  <div class="visual-chip on" data-tag="">All</div>
+                  <div class="visual-chip" data-tag="Annual">Annual</div>
+                  <div class="visual-chip" data-tag="Monthly">Monthly</div>
+                  <div class="visual-chip" data-tag="Quarterly">Quarterly</div>
+                </div>
+                <div class="visual-cards">
+                  <div class="visual-card" data-tag="Annual">
+                    <div class="visual-card-img" style="background: #eef2f6">
+                      <div class="visual-card-tag">Annual</div>
+                    </div>
+                    <div class="visual-card-body">
+                      <div class="visual-line"></div>
+                      <div class="visual-line short"></div>
+                    </div>
+                  </div>
+                  <div class="visual-card" data-tag="Monthly">
+                    <div class="visual-card-img" style="background: #f0f0f5">
+                      <div class="visual-card-tag">Monthly</div>
+                    </div>
+                    <div class="visual-card-body">
+                      <div class="visual-line"></div>
+                      <div class="visual-line short"></div>
+                    </div>
+                  </div>
+                  <div class="visual-card" data-tag="Quarterly">
+                    <div class="visual-card-img" style="background: #f0f4f0">
+                      <div class="visual-card-tag">Quarterly</div>
+                    </div>
+                    <div class="visual-card-body">
+                      <div class="visual-line"></div>
+                      <div class="visual-line short"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS (blue bar) ── -->
+    <div class="stats-bar">
+      <div class="wrap">
+        <div class="stats-grid">
+          <div class="rise">
+            <div class="stat-number"><strong>100</strong>/100</div>
+            <div class="stat-label">PageSpeed Score — out of the box</div>
+          </div>
+          <div class="rise d1">
+            <div class="stat-number"><strong>&lt;1</strong>s</div>
+            <div class="stat-label">Largest Contentful Paint</div>
+          </div>
+          <div class="rise d2">
+            <div class="stat-number"><strong>6</strong>+</div>
+            <div class="stat-label">Custom blocks built on top</div>
+          </div>
+          <div class="rise d3">
+            <div class="stat-number"><strong>0</strong></div>
+            <div class="stat-label">Build steps or dependencies</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WHAT AEM PROVIDES ── -->
+    <section class="section" id="capabilities">
+      <div class="wrap">
+        <div class="section-head rise">
+          <h2>What AEM Edge Delivery gives you</h2>
+          <p>
+            Before a single line of custom code, every EDS project ships with a
+            set of capabilities that make it faster and easier to run than any
+            traditional CMS.
+          </p>
+        </div>
+        <div class="cap-grid">
+          <div class="cap-card rise d1">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/server42/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Edge Performance</h3>
+              <p>
+                Code splits per block, loads at the edge, and ships zero
+                render-blocking resources
+              </p>
+            </div>
+          </div>
+          <div class="cap-card rise d2">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/notebook7/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Document Authoring</h3>
+              <p>Authors write in da.live — a familiar document editor..</p>
+            </div>
+          </div>
+          <div class="cap-card rise d3">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/citynight/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Global CDN</h3>
+              <p>
+                Content is cached at Adobe's edge network and invalidated
+                automatically on publish.
+              </p>
+            </div>
+          </div>
+          <div class="cap-card rise d1">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/building55/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Block Architecture</h3>
+              <p>
+                Every section of a page loads its own isolated CSS and JS. Only
+                what's visible is ever downloaded.
+              </p>
+            </div>
+          </div>
+          <div class="cap-card rise d2">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/camera19/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Image Optimisation</h3>
+              <p>
+                Every image is automatically resized, converted to WebP, and
+                lazy-loaded.
+              </p>
+            </div>
+          </div>
+          <div class="cap-card rise d3">
+            <div
+              class="cap-card-bg"
+              style="
+                background-image: url(&quot;https://picsum.photos/seed/code88/600/400&quot;);
+              "
+            ></div>
+            <div class="cap-card-content">
+              <h3>Semantic HTML &amp; SEO</h3>
+              <p>
+                Markup is generated from document structure — clean headings,
+                proper landmarks.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── COMPARISON ── -->
+    <section class="section section-gray">
+      <div class="wrap">
+        <div class="section-head rise">
+          <h2>What customisation adds on top</h2>
+          <p>
+            The platform gives you the rails. Custom blocks let you extend it
+            into something distinctly yours — without sacrificing the
+            performance baseline.
+          </p>
+        </div>
+        <div class="compare-wrap rise">
+          <div class="compare-col std">
+            <div class="compare-label std-label">
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+              </svg>
+              Standard AEM
+            </div>
+            <h3>Out of the box</h3>
+            <ul class="item-list std">
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Fast edge delivery with PageSpeed 100</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Document-based authoring in da.live</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Automatic image optimisation</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Generic header and footer fragments</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Basic responsive grid layout</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Preview → Publish content workflow</span>
+              </li>
+            </ul>
+          </div>
+          <div class="compare-col plus">
+            <div class="compare-label plus-label">
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              With Custom Blocks
+            </div>
+            <h3>What we built on top</h3>
+
+            <ul class="item-list plus">
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Live search by title, tag and date</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Tag filter chips — auto-built from content</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Paginated card grid (8 cards per page)</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Staggered scroll entrance animations</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Brand-consistent design token system</span>
+              </li>
+              <li>
+                <span class="icon-wrap"
+                  ><svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                ><span>Microsoft-style Segoe UI typography</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SPOTLIGHT ── -->
+    <section class="section">
+      <div class="wrap">
+        <div class="spotlight-grid">
+          <div class="spotlight-visual rise">
+            <div class="sp-titlebar">
+              <div class="visual-tab-label">
+                <div class="visual-tab-dot"></div>
+                EDS Reports
+              </div>
+              <div class="win-controls">
+                <div class="win-btn">&#x2013;</div>
+                <div class="win-btn">&#x25A1;</div>
+                <div class="win-btn win-close">&#x2715;</div>
+              </div>
+            </div>
+            <div class="sp-header">
+              <div class="sp-search">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+                Search reports by title…
+              </div>
+              <div class="sp-chips">
+                <div class="sp-chip on" data-tag="">All</div>
+                <div class="sp-chip" data-tag="Annual">Annual</div>
+                <div class="sp-chip" data-tag="Monthly">Monthly</div>
+                <div class="sp-chip" data-tag="Quarterly">Quarterly</div>
+              </div>
+            </div>
+            <div class="sp-cards">
+              <div class="sp-card" data-tag="Annual">
+                <div class="sp-img" style="background: #eef2f6">
+                  <div class="sp-badge">Annual</div>
+                </div>
+                <div class="sp-body">
+                  <div class="sp-line"></div>
+                  <div class="sp-line s"></div>
+                  <div class="sp-line xs"></div>
+                </div>
+              </div>
+              <div class="sp-card" data-tag="Monthly">
+                <div class="sp-img" style="background: #f2f2f6">
+                  <div class="sp-badge">Monthly</div>
+                </div>
+                <div class="sp-body">
+                  <div class="sp-line"></div>
+                  <div class="sp-line s"></div>
+                  <div class="sp-line xs"></div>
+                </div>
+              </div>
+              <div class="sp-card" data-tag="Quarterly">
+                <div class="sp-img" style="background: #f0f4f0">
+                  <div class="sp-badge">Quarterly</div>
+                </div>
+                <div class="sp-body">
+                  <div class="sp-line"></div>
+                  <div class="sp-line s"></div>
+                  <div class="sp-line xs"></div>
+                </div>
+              </div>
+              <div class="sp-card" data-tag="Annual">
+                <div class="sp-img" style="background: #f5f2ee">
+                  <div class="sp-badge">Annual</div>
+                </div>
+                <div class="sp-body">
+                  <div class="sp-line"></div>
+                  <div class="sp-line s"></div>
+                  <div class="sp-line xs"></div>
+                </div>
+              </div>
+            </div>
+            <div class="sp-pager">
+              <div class="sp-pg">‹</div>
+              <div class="sp-pg on">1</div>
+              <div class="sp-pg">2</div>
+              <div class="sp-pg">›</div>
+            </div>
+          </div>
+
+          <div class="spotlight-text rise d2">
+            <h2>Reports &amp; Documents</h2>
+            <p>
+              A custom AEM block that transforms a da.live table into a fully
+              interactive report directory. Authors add rows to a document; the
+              block handles search, filtering, pagination, and layout
+              automatically.
+            </p>
+            <a href="/reports" class="btn btn-blue">
+              Open live page
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RESOURCES ── -->
+    <section class="section section-gray" id="resources">
+      <div class="wrap">
+        <div class="section-head rise">
+          <h2>Resources to go deeper</h2>
+          <p>
+            Everything you need to understand the platform, extend it, and get
+            your content team authoring in days.
+          </p>
+        </div>
+        <div class="res-grid">
+          <div class="res-card rise d1">
+            <div class="res-card-body">
+              <div class="res-card-type">Documentation</div>
+              <h3>AEM Edge Delivery Developer Guide</h3>
+              <p>
+                Block anatomy, authoring contracts, performance best practices,
+                and the three-phase loading model.
+              </p>
+              <a
+                href="https://www.aem.live/developer/tutorial"
+                class="res-link"
+                target="_blank"
+              >
+                Read guide
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="res-card rise d2">
+            <div class="res-card-body">
+              <div class="res-card-type">Live Demo</div>
+              <h3>Reports &amp; Documents Page</h3>
+              <p>
+                See the custom reports block in production — with search, tag
+                filtering, pagination, and animations.
+              </p>
+              <a href="/reports" class="res-link">
+                View page
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="res-card rise d3">
+            <div class="res-card-body">
+              <div class="res-card-type">Authoring Guide</div>
+              <h3>Creating Content in da.live</h3>
+              <p>
+                How to create pages, author blocks using tables, and publish
+                content through the Preview → Publish workflow.
+              </p>
+              <a
+                href="https://www.aem.live/docs/authoring"
+                class="res-link"
+                target="_blank"
+              >
+                Learn authoring
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="res-card rise d4">
+            <div class="res-card-body">
+              <div class="res-card-type">Architecture</div>
+              <h3>David's Model — AEM Principles</h3>
+              <p>
+                The philosophy behind what goes in content vs what goes in code
+                — the guiding principle behind every block decision.
+              </p>
+              <a
+                href="https://www.aem.live/docs/davidsmodel"
+                class="res-link"
+                target="_blank"
+              >
+                Read article
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="cta-section">
+      <div class="wrap">
+        <h2 class="rise">Ready to build on AEM?</h2>
+        <p class="rise d1">
+          Everything you've seen here runs on vanilla JS, standard CSS, and
+          da.live content — no frameworks, no build steps, no compromise on
+          performance.
+        </p>
+        <div
+          class="rise d2"
+          style="
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <a href="/reports" class="btn btn-white">
+            See Reports in Action
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+          <a
+            href="https://www.aem.live/developer/tutorial"
+            class="btn btn-outline-light"
+            target="_blank"
+            >Read the docs</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-row">
+          <div class="footer-brand">
+            <span class="nav-brand-dot"></span>
+            Reports Platform
+          </div>
+          <ul class="footer-links">
+            <li><a href="/reports">Reports</a></li>
+            <li><a href="https://www.aem.live" target="_blank">AEM Docs</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <span class="footer-note"
+            >Built on Adobe Experience Manager Edge Delivery Services</span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          }),
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".rise").forEach((el) => io.observe(el));
+
+      // Hero mockup chip interaction
+      document
+        .querySelectorAll(".visual-toolbar .visual-chip")
+        .forEach((chip) => {
+          chip.style.cursor = "pointer";
+          chip.addEventListener("click", () => {
+            const tag = chip.dataset.tag;
+            chip
+              .closest(".visual-toolbar")
+              .querySelectorAll(".visual-chip")
+              .forEach((c) => c.classList.remove("on"));
+            chip.classList.add("on");
+            chip
+              .closest(".visual-body")
+              .querySelectorAll(".visual-card")
+              .forEach((card) => {
+                card.style.display =
+                  !tag || card.dataset.tag === tag ? "" : "none";
+              });
+          });
+        });
+
+      // Spotlight chip interaction
+      document.querySelectorAll(".sp-chips .sp-chip").forEach((chip) => {
+        chip.style.cursor = "pointer";
+        chip.addEventListener("click", () => {
+          const tag = chip.dataset.tag;
+          chip
+            .closest(".sp-chips")
+            .querySelectorAll(".sp-chip")
+            .forEach((c) => c.classList.remove("on"));
+          chip.classList.add("on");
+          chip
+            .closest(".spotlight-visual")
+            .querySelectorAll(".sp-card")
+            .forEach((card) => {
+              card.style.display =
+                !tag || card.dataset.tag === tag ? "" : "none";
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (width >= 600px) {
+  .capabilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .capabilities-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.capabilities-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.2s;
+}
+
+.capabilities-card:hover {
+  transform: translateY(-3px);
+}
+
+.capabilities-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #c8d8e8;
+  transition: transform 0.45s ease;
+}
+
+.capabilities-card:hover .capabilities-card-bg {
+  transform: scale(1.06);
+}
+
+.capabilities-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 5%) 0%,
+    rgb(0 0 0 / 60%) 50%,
+    rgb(0 0 0 / 82%) 100%
+  );
+}
+
+.capabilities-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 22px;
+}
+
+.capabilities-card-content h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #fff;
+}
+
+.capabilities-card-content p {
+  font-size: 13px;
+  color: rgb(255 255 255 / 85%);
+  line-height: 1.6;
+  margin: 0;
+}
