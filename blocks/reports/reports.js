@@ -75,16 +75,24 @@ function renderCard(report) {
 
   const imageWrapper = document.createElement('div');
   imageWrapper.className = 'reports-card-image';
-  if (report.picture) imageWrapper.append(report.picture);
+  if (report.picture) {
+    imageWrapper.append(report.picture);
+    const tagEl = document.createElement('span');
+    tagEl.className = 'reports-card-tag';
+    tagEl.textContent = report.tag;
+    imageWrapper.append(tagEl);
+  }
   li.append(imageWrapper);
 
   const body = document.createElement('div');
   body.className = 'reports-card-body';
 
-  const tagEl = document.createElement('span');
-  tagEl.className = 'reports-card-tag';
-  tagEl.textContent = report.tag;
-  body.append(tagEl);
+  if (!report.picture) {
+    const tagEl = document.createElement('span');
+    tagEl.className = 'reports-card-tag';
+    tagEl.textContent = report.tag;
+    body.append(tagEl);
+  }
 
   const titleEl = document.createElement('h3');
   titleEl.textContent = report.title;
@@ -156,7 +164,10 @@ export default function decorate(block) {
   searchInput.type = 'search';
   searchInput.id = 'reports-search-input';
   searchInput.placeholder = 'Search reports by title or description…';
-  searchWrapper.append(searchLabel, searchInput);
+  const searchField = document.createElement('div');
+  searchField.className = 'reports-search-field';
+  searchField.append(searchInput);
+  searchWrapper.append(searchLabel, searchField);
 
   const tags = [...new Set(reports.map((r) => r.tag))];
   const filterWrapper = document.createElement('div');
