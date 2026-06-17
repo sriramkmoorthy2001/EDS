@@ -15,15 +15,17 @@ export default function decorate(block) {
   let headingEl = null;
   let descEl = null;
 
-  // A row with a single cell containing a heading = section heading
-  if (rows[0]?.children.length === 1 && rows[0].querySelector('h1,h2,h3,h4,h5,h6')) {
-    headingEl = rows[0].querySelector('h1,h2,h3,h4,h5,h6');
+  const isSparseCells = (row) => [...row.children].slice(1).every((c) => !c.textContent.trim());
+
+  // First cell has a heading and other cells are empty → section heading row
+  if (rows[0] && isSparseCells(rows[0]) && rows[0].children[0]?.querySelector('h1,h2,h3,h4,h5,h6')) {
+    headingEl = rows[0].children[0].querySelector('h1,h2,h3,h4,h5,h6');
     cardStart = 1;
   }
 
-  // Next single-cell row with only a paragraph = section description
-  if (cardStart === 1 && rows[1]?.children.length === 1 && !rows[1].querySelector('h1,h2,h3,h4,h5,h6')) {
-    descEl = rows[1].querySelector('p') || rows[1].children[0];
+  // Next row: first cell has text, other cells empty, no heading → description row
+  if (cardStart === 1 && rows[1] && isSparseCells(rows[1]) && !rows[1].children[0]?.querySelector('h1,h2,h3,h4,h5,h6')) {
+    descEl = rows[1].children[0]?.querySelector('p') || rows[1].children[0];
     cardStart = 2;
   }
 
