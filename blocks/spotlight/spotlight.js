@@ -78,7 +78,7 @@ export default function decorate(block) {
   textCol.innerHTML = `
     <h2>${heading}</h2>
     <p>${desc}</p>
-    ${ctaLink ? `<a href="${ctaLink.href}" class="spotlight-btn">${ctaLink.textContent} →</a>` : ''}`;
+    ${ctaLink ? `<a href="${ctaLink.href}" class="spotlight-btn">${ctaLink.textContent}</a>` : ''}`;
 
   const inner = document.createElement('div');
   inner.className = 'spotlight-inner rise';

@@ -228,7 +228,7 @@
   border-radius: 999px;
 }
 
-.spotlight-btn {
+a.spotlight-btn {
   display: inline-flex;
   align-items: center;
   padding: 11px 24px;
@@ -241,7 +241,7 @@
   transition: background 0.15s;
 }
 
-.spotlight-btn:hover {
+a.spotlight-btn:hover {
   background: #106ebe;
   text-decoration: none;
   color: #fff;
