@@ -10,7 +10,24 @@ function observeRise(root) {
 }
 
 export default function decorate(block) {
-  const cards = [...block.children].map((row) => {
+  const rows = [...block.children];
+  let cardStart = 0;
+  let headingEl = null;
+  let descEl = null;
+
+  // A row with a single cell containing a heading = section heading
+  if (rows[0]?.children.length === 1 && rows[0].querySelector('h1,h2,h3,h4,h5,h6')) {
+    headingEl = rows[0].querySelector('h1,h2,h3,h4,h5,h6');
+    cardStart = 1;
+  }
+
+  // Next single-cell row with only a paragraph = section description
+  if (cardStart === 1 && rows[1]?.children.length === 1 && !rows[1].querySelector('h1,h2,h3,h4,h5,h6')) {
+    descEl = rows[1].querySelector('p') || rows[1].children[0];
+    cardStart = 2;
+  }
+
+  const cards = rows.slice(cardStart).map((row) => {
     const cells = [...row.children];
     const title = cells[0]?.querySelector('h1,h2,h3,h4,p,strong')?.textContent.trim()
       || cells[0]?.textContent.trim() || '';
@@ -22,6 +39,14 @@ export default function decorate(block) {
   }).filter((c) => c.title);
 
   block.textContent = '';
+
+  if (headingEl || descEl) {
+    const header = document.createElement('div');
+    header.className = 'resources-heading rise';
+    if (headingEl) header.append(headingEl);
+    if (descEl) header.append(descEl);
+    block.append(header);
+  }
 
   const grid = document.createElement('div');
   grid.className = 'resources-grid';
