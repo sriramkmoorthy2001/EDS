@@ -42,5 +42,6 @@ export default function decorate(block) {
   });
 
   block.append(grid);
+  block.closest('.section')?.classList.add('resources-container');
   observeRise(block);
 }

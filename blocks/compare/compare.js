@@ -47,5 +47,6 @@ export default function decorate(block) {
     </div>`;
 
   block.append(wrap);
+  block.closest('.section')?.classList.add('compare-container');
   observeRise(block);
 }
