@@ -333,3 +333,15 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* scroll entrance animation */
+.rise {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.rise.in {
+  opacity: 1;
+  transform: none;
+}

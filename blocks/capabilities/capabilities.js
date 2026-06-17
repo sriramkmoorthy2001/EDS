@@ -6,7 +6,9 @@ function observeRise(root) {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
   }, { threshold: 0.1 });
-  root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+  }));
 }
 
 export default function decorate(block) {

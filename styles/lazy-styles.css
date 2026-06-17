@@ -1,13 +1,1 @@
 /* add global styles that can be loaded post LCP here */
-
-/* scroll entrance animation */
-.rise {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
-}
-
-.rise.in {
-  opacity: 1;
-  transform: translateY(0);
-}
