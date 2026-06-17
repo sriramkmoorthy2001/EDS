@@ -61,7 +61,7 @@ body:has(.reports) main > .section:first-of-type p {
   box-sizing: border-box;
   width: 100%;
   max-width: 320px;
-  border: 1px solid var(--light-color);
+  border: 1px solid #c0c0c0;
   border-radius: 999px;
   padding: 0.55em 1.2em 0.55em 2.4em;
   font: inherit;
@@ -70,9 +70,8 @@ body:has(.reports) main > .section:first-of-type p {
 }
 
 .reports-search-field input:focus-visible {
-  outline: 2px solid #ffb900;
-  outline-offset: 2px;
-  border-color: #ffb900;
+  outline: none;
+  border-color: #c0c0c0;
 }
 
 /* filter chips */
