@@ -7,9 +7,10 @@
 .compare-wrap {
   display: grid;
   grid-template-columns: 1fr;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #d0d0d0;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 16px rgb(0 0 0 / 8%);
 }
 
 @media (width >= 900px) {

@@ -66,23 +66,18 @@ export default function decorate(block) {
   const rows = [...block.children];
   const heading = rows[0]?.querySelector('h1,h2,h3,h4')?.textContent.trim() || rows[0]?.textContent.trim();
   const desc = rows[1]?.textContent.trim();
-  const pillsText = rows[2]?.textContent.trim();
-  const ctaLink = rows[3]?.querySelector('a[href]');
+  // row 2 is pills (ignored), row 3 is CTA
+  const ctaLink = rows[3]?.querySelector('a[href]') || rows[2]?.querySelector('a[href]');
 
   block.textContent = '';
 
   const mockup = buildMockup();
-
-  const pills = pillsText
-    ? pillsText.split(',').map((p) => `<span class="spotlight-pill">${p.trim()}</span>`).join('')
-    : '';
 
   const textCol = document.createElement('div');
   textCol.className = 'spotlight-text';
   textCol.innerHTML = `
     <h2>${heading}</h2>
     <p>${desc}</p>
-    ${pills ? `<div class="spotlight-pills">${pills}</div>` : ''}
     ${ctaLink ? `<a href="${ctaLink.href}" class="spotlight-btn">${ctaLink.textContent} →</a>` : ''}`;
 
   const inner = document.createElement('div');
