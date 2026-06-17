@@ -142,7 +142,7 @@ function getPageNumbers(current, total) {
 }
 
 export default function decorate(block) {
-  const reports = [...block.children].map(parseReportRow);
+  const reports = [...block.children].map(parseReportRow).filter((r) => r.title || r.picture);
 
   block.querySelectorAll('picture > img').forEach((img) => {
     img.closest('picture').replaceWith(
