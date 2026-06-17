@@ -1,3 +1,12 @@
+function observeRise(root) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+}
+
 export default function decorate(block) {
   const rows = [...block.children];
 
@@ -36,4 +45,5 @@ export default function decorate(block) {
     </div>`;
 
   block.append(wrap);
+  observeRise(block);
 }

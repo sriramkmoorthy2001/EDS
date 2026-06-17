@@ -1,3 +1,12 @@
+function observeRise(root) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+}
+
 function buildMockup() {
   const wrap = document.createElement('div');
   wrap.className = 'spotlight-mockup';
@@ -88,4 +97,6 @@ export default function decorate(block) {
       });
     });
   });
+
+  observeRise(block);
 }

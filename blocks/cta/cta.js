@@ -1,3 +1,12 @@
+function observeRise(root) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+}
+
 export default function decorate(block) {
   const rows = [...block.children];
   const heading = rows[0]?.querySelector('h1,h2,h3,h4')?.textContent.trim() || rows[0]?.textContent.trim();
@@ -35,4 +44,5 @@ export default function decorate(block) {
   }
 
   block.append(inner);
+  observeRise(block);
 }

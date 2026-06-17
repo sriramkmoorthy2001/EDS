@@ -1,3 +1,12 @@
+function observeRise(root) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  root.querySelectorAll('.rise').forEach((el) => io.observe(el));
+}
+
 export default function decorate(block) {
   const cards = [...block.children].map((row) => {
     const cells = [...row.children];
@@ -31,4 +40,5 @@ export default function decorate(block) {
   });
 
   block.append(grid);
+  observeRise(block);
 }

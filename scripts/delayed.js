@@ -1,14 +1,1 @@
-// scroll entrance animation observer
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.12 },
-);
-
-document.querySelectorAll('.rise').forEach((el) => observer.observe(el));
+// add delayed functionality here
