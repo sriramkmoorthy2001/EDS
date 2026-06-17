@@ -17,4 +17,5 @@ export default function decorate(block) {
   }
 
   block.append(inner);
+  block.closest('.section')?.classList.add('areaheading-container');
 }
