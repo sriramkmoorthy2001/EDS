@@ -70,8 +70,8 @@ body:has(.reports) main > .section:first-of-type p {
 
 .reports-filter-chip:hover {
   border-color: #ffb900;
-  background-color: #fff8e1;
-  color: #7a4f00;
+  background-color: #ffb900;
+  color: #1a1a1a;
 }
 
 .reports-filter-chip.is-active {
