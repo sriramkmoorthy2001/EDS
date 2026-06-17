@@ -248,7 +248,8 @@ export default function decorate(block) {
     const filtered = cards.filter(({ report }) => {
       const matchesQuery = !query
         || report.title.toLowerCase().includes(query)
-        || report.description.toLowerCase().includes(query);
+        || report.tag.toLowerCase().includes(query)
+        || report.date.toLowerCase().includes(query);
       const matchesTag = !activeTag || report.tag === activeTag;
       return matchesQuery && matchesTag;
     });
