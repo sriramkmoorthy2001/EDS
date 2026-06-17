@@ -1,13 +1,7 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
-/**
- * Splits a body cell into logical lines, regardless of whether the author's
- * editor produced separate <p>/<h*> elements or wrapped everything in one
- * element with <br> line breaks (descends into block elements so inner
- * <br>s still split correctly).
- * @param {Element} bodyCell The body cell element
- * @returns {Element[]} One wrapper element per line, in document order
- */
+const PAGE_SIZE = 8;
+
 function getLines(bodyCell) {
   const lines = [];
   let buffer = [];
@@ -35,14 +29,6 @@ function getLines(bodyCell) {
   return lines;
 }
 
-/**
- * Builds a report record from one authored row. The body cell's first line
- * is always the title; remaining lines are matched by a "Date:"/"Tag:"
- * prefix, a link, or otherwise treated as description text.
- * @param {Element} row The row element
- * @returns {{title: string, description: string, date: string, tag: string,
- *   link: string, linkText: string, picture: Element}}
- */
 function parseReportRow(row) {
   const [imageCell, bodyCell] = row.children;
   const picture = imageCell?.querySelector('picture') || null;
@@ -83,11 +69,6 @@ function parseReportRow(row) {
   };
 }
 
-/**
- * Renders a single report card.
- * @param {object} report A report record from parseReportRow
- * @returns {Element} The card <li> element
- */
 function renderCard(report) {
   const li = document.createElement('li');
   li.className = 'reports-card';
@@ -100,14 +81,14 @@ function renderCard(report) {
   const body = document.createElement('div');
   body.className = 'reports-card-body';
 
-  const tag = document.createElement('span');
-  tag.className = 'reports-card-tag';
-  tag.textContent = report.tag;
-  body.append(tag);
+  const tagEl = document.createElement('span');
+  tagEl.className = 'reports-card-tag';
+  tagEl.textContent = report.tag;
+  body.append(tagEl);
 
-  const title = document.createElement('h3');
-  title.textContent = report.title;
-  body.append(title);
+  const titleEl = document.createElement('h3');
+  titleEl.textContent = report.title;
+  body.append(titleEl);
 
   if (report.description) {
     const description = document.createElement('p');
@@ -119,17 +100,17 @@ function renderCard(report) {
   const meta = document.createElement('div');
   meta.className = 'reports-card-meta';
   if (report.date) {
-    const date = document.createElement('span');
-    date.className = 'reports-card-date';
-    date.textContent = report.date;
-    meta.append(date);
+    const dateEl = document.createElement('span');
+    dateEl.className = 'reports-card-date';
+    dateEl.textContent = report.date;
+    meta.append(dateEl);
   }
   if (report.link) {
-    const link = document.createElement('a');
-    link.className = 'reports-card-link';
-    link.href = report.link;
-    link.textContent = report.linkText;
-    meta.append(link);
+    const linkEl = document.createElement('a');
+    linkEl.className = 'reports-card-link';
+    linkEl.href = report.link;
+    linkEl.textContent = report.linkText;
+    meta.append(linkEl);
   }
   body.append(meta);
 
@@ -137,10 +118,21 @@ function renderCard(report) {
   return li;
 }
 
-/**
- * loads and decorates the reports block
- * @param {Element} block The reports block element
- */
+function getPageNumbers(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const core = new Set([1, total]);
+  for (let i = Math.max(2, current - 2); i <= Math.min(total - 1, current + 2); i += 1) {
+    core.add(i);
+  }
+  const sorted = [...core].sort((a, b) => a - b);
+  const result = [];
+  sorted.forEach((p, idx) => {
+    result.push(p);
+    if (idx < sorted.length - 1 && sorted[idx + 1] - p > 1) result.push('…');
+  });
+  return result;
+}
+
 export default function decorate(block) {
   const reports = [...block.children].map(parseReportRow);
 
@@ -180,12 +172,12 @@ export default function decorate(block) {
   filterWrapper.append(allButton);
 
   const chips = [allButton];
-  tags.forEach((tag) => {
+  tags.forEach((t) => {
     const chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'reports-filter-chip';
-    chip.textContent = tag;
-    chip.dataset.tag = tag;
+    chip.textContent = t;
+    chip.dataset.tag = t;
     filterWrapper.append(chip);
     chips.push(chip);
   });
@@ -198,38 +190,95 @@ export default function decorate(block) {
   const emptyState = document.createElement('p');
   emptyState.className = 'reports-empty';
   emptyState.textContent = 'No reports match your search.';
+  emptyState.hidden = true;
+
+  const pagination = document.createElement('nav');
+  pagination.className = 'reports-pagination';
+  pagination.setAttribute('aria-label', 'Report pages');
+  pagination.hidden = true;
 
   const cards = reports.map((report) => ({ report, card: renderCard(report) }));
-
   let activeTag = '';
+  let currentPage = 1;
 
-  function applyFilters() {
+  const renderPagination = (current, total, onNavigate) => {
+    pagination.innerHTML = '';
+    if (total <= 1) { pagination.hidden = true; return; }
+    pagination.hidden = false;
+
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'reports-page-btn';
+    prev.setAttribute('aria-label', 'Previous page');
+    prev.textContent = '‹';
+    prev.disabled = current === 1;
+    prev.addEventListener('click', () => onNavigate(current - 1));
+    pagination.append(prev);
+
+    getPageNumbers(current, total).forEach((page) => {
+      if (page === '…') {
+        const span = document.createElement('span');
+        span.className = 'reports-page-ellipsis';
+        span.textContent = page;
+        pagination.append(span);
+      } else {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `reports-page-btn${page === current ? ' is-active' : ''}`;
+        if (page === current) btn.setAttribute('aria-current', 'page');
+        btn.textContent = page;
+        btn.addEventListener('click', () => onNavigate(page));
+        pagination.append(btn);
+      }
+    });
+
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'reports-page-btn';
+    next.setAttribute('aria-label', 'Next page');
+    next.textContent = '›';
+    next.disabled = current === total;
+    next.addEventListener('click', () => onNavigate(current + 1));
+    pagination.append(next);
+  };
+
+  const applyFilters = (resetPage = false) => {
+    if (resetPage) currentPage = 1;
     const query = searchInput.value.trim().toLowerCase();
-    let visibleCount = 0;
-    cards.forEach(({ report, card }) => {
+    const filtered = cards.filter(({ report }) => {
       const matchesQuery = !query
         || report.title.toLowerCase().includes(query)
         || report.description.toLowerCase().includes(query);
       const matchesTag = !activeTag || report.tag === activeTag;
-      const visible = matchesQuery && matchesTag;
-      card.hidden = !visible;
-      if (visible) visibleCount += 1;
+      return matchesQuery && matchesTag;
     });
-    emptyState.hidden = visibleCount > 0;
-  }
 
-  searchInput.addEventListener('input', applyFilters);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
 
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageCards = filtered.slice(start, start + PAGE_SIZE);
+
+    grid.innerHTML = '';
+    pageCards.forEach(({ card }) => grid.append(card));
+
+    emptyState.hidden = filtered.length > 0;
+    renderPagination(currentPage, totalPages, (page) => {
+      currentPage = page;
+      applyFilters();
+      block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
+
+  searchInput.addEventListener('input', () => applyFilters(true));
   chips.forEach((chip) => {
     chip.addEventListener('click', () => {
       activeTag = chip.dataset.tag;
       chips.forEach((c) => c.classList.toggle('is-active', c === chip));
-      applyFilters();
+      applyFilters(true);
     });
   });
 
-  cards.forEach(({ card }) => grid.append(card));
   applyFilters();
-
-  block.append(toolbar, grid, emptyState);
+  block.append(toolbar, grid, emptyState, pagination);
 }
