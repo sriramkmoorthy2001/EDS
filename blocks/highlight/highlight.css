@@ -85,6 +85,10 @@
   color: #000;
 }
 
+.highlight-heading * {
+  font-size: inherit !important;
+}
+
 .highlight-desc {
   margin: 0 0 24px;
   font-size: 17px;
