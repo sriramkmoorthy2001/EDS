@@ -2,15 +2,66 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 
 // authors mark a word or phrase as `((accented text))(color)` in the heading,
 // e.g. "This is my ((second)) heading" -> "This is my ((second))(red) heading"
+// Matching happens against the heading's plain text (not innerHTML) so that bold/italic
+// applied to part of the marked phrase in da.live doesn't break the marker adjacency.
 const ACCENT_PATTERN = /\(\(([\s\S]+?)\)\)\(([^()]+)\)/g;
 const SAFE_COLOR = /^(#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|[a-zA-Z]{2,20})$/;
 
+function findTextPosition(root, targetOffset) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let consumed = 0;
+  let node = walker.nextNode();
+  let last = null;
+  while (node) {
+    const len = node.textContent.length;
+    if (consumed + len >= targetOffset) {
+      return { node, offset: targetOffset - consumed };
+    }
+    consumed += len;
+    last = node;
+    node = walker.nextNode();
+  }
+  return last ? { node: last, offset: last.textContent.length } : null;
+}
+
+function rangeAt(root, start, end) {
+  const startPos = findTextPosition(root, start);
+  const endPos = findTextPosition(root, end);
+  if (!startPos || !endPos) return null;
+  const range = document.createRange();
+  range.setStart(startPos.node, startPos.offset);
+  range.setEnd(endPos.node, endPos.offset);
+  return range;
+}
+
 function applyHeadingAccents(heading) {
-  if (!heading || !ACCENT_PATTERN.test(heading.innerHTML)) return;
-  ACCENT_PATTERN.lastIndex = 0;
-  heading.innerHTML = heading.innerHTML.replace(ACCENT_PATTERN, (match, phrase, color) => {
-    const safeColor = SAFE_COLOR.test(color.trim()) ? color.trim() : null;
-    return safeColor ? `<span class="highlight-heading-accent" style="color:${safeColor}">${phrase}</span>` : phrase;
+  if (!heading) return;
+  const text = heading.textContent;
+  const matches = [...text.matchAll(ACCENT_PATTERN)].map((m) => ({
+    fullStart: m.index,
+    fullEnd: m.index + m[0].length,
+    phraseStart: m.index + 2,
+    phraseEnd: m.index + 2 + m[1].length,
+    color: m[2].trim(),
+  }));
+
+  // process right-to-left so earlier offsets stay valid as later ones are mutated
+  matches.reverse().forEach(({
+    fullStart, fullEnd, phraseStart, phraseEnd, color,
+  }) => {
+    rangeAt(heading, phraseEnd, fullEnd)?.deleteContents(); // remove `))(color)`
+    rangeAt(heading, fullStart, phraseStart)?.deleteContents(); // remove `((`
+    if (!SAFE_COLOR.test(color)) return;
+    const phraseRange = rangeAt(heading, phraseStart - 2, phraseEnd - 2);
+    if (!phraseRange) return;
+    const span = document.createElement('span');
+    span.className = 'highlight-heading-accent';
+    span.style.color = color;
+    try {
+      phraseRange.surroundContents(span);
+    } catch {
+      // formatting inside the phrase straddles an element boundary we can't safely wrap
+    }
   });
 }
 
