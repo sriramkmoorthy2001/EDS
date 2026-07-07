@@ -1,5 +1,19 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
+// authors mark a word or phrase as `((accented text))(color)` in the heading,
+// e.g. "This is my ((second)) heading" -> "This is my ((second))(red) heading"
+const ACCENT_PATTERN = /\(\(([\s\S]+?)\)\)\(([^()]+)\)/g;
+const SAFE_COLOR = /^(#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|[a-zA-Z]{2,20})$/;
+
+function applyHeadingAccents(heading) {
+  if (!heading || !ACCENT_PATTERN.test(heading.innerHTML)) return;
+  ACCENT_PATTERN.lastIndex = 0;
+  heading.innerHTML = heading.innerHTML.replace(ACCENT_PATTERN, (match, phrase, color) => {
+    const safeColor = SAFE_COLOR.test(color.trim()) ? color.trim() : null;
+    return safeColor ? `<span class="highlight-heading-accent" style="color:${safeColor}">${phrase}</span>` : phrase;
+  });
+}
+
 function buildSlide(row) {
   const [imageCell, contentCell] = row.children;
 
@@ -23,6 +37,7 @@ function buildSlide(row) {
   const heading = contentCell?.querySelector('h1, h2, h3, h4, h5, h6');
   if (heading) {
     heading.className = 'highlight-heading';
+    applyHeadingAccents(heading);
     content.append(heading);
   }
 
