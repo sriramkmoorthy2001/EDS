@@ -16,7 +16,7 @@
   position: relative;
   display: none;
   align-items: flex-end;
-  min-height: 420px;
+  min-height: 340px;
   background-color: #1a1a1a;
 }
 
@@ -26,13 +26,13 @@
 
 @media (width >= 600px) {
   .highlight-slide {
-    min-height: 480px;
+    min-height: 400px;
   }
 }
 
 @media (width >= 900px) {
   .highlight-slide {
-    min-height: 560px;
+    min-height: 460px;
   }
 }
 
@@ -150,23 +150,54 @@ a.highlight-cta:hover {
   .highlight-arrow-next { right: 24px; }
 }
 
-.highlight-dots {
+.highlight-controls {
   position: absolute;
   z-index: 2;
   left: 0;
   right: 0;
   bottom: 20px;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 14px;
 }
 
 @media (width >= 900px) {
-  .highlight-dots {
-    justify-content: flex-start;
-    left: 64px;
+  .highlight-controls {
     bottom: 32px;
   }
+}
+
+.highlight-playpause {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 20%);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.highlight-playpause svg {
+  width: 14px;
+  height: 14px;
+}
+
+.highlight-playpause:hover,
+.highlight-playpause:focus-visible {
+  background-color: rgb(255 255 255 / 35%);
+  outline: none;
+}
+
+.highlight-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .highlight-dot {

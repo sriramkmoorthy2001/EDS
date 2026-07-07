@@ -63,7 +63,13 @@ export default function decorate(block) {
   block.setAttribute('aria-roledescription', 'carousel');
   block.setAttribute('aria-label', 'Highlights');
 
+  const AUTOPLAY_MS = 6000;
+  const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>';
+
   let current = 0;
+  let autoplayId = null;
+  let isPlaying = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const dotsNav = document.createElement('div');
   dotsNav.className = 'highlight-dots';
@@ -88,7 +94,11 @@ export default function decorate(block) {
   next.setAttribute('aria-label', 'Next highlight');
   next.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
 
-  const goTo = (index) => {
+  const playPause = document.createElement('button');
+  playPause.type = 'button';
+  playPause.className = 'highlight-playpause';
+
+  const goToInternal = (index) => {
     current = (index + slides.length) % slides.length;
     slides.forEach((slide, i) => {
       slide.classList.toggle('is-active', i === current);
@@ -97,15 +107,44 @@ export default function decorate(block) {
     dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
   };
 
+  const stopAutoplay = () => {
+    clearInterval(autoplayId);
+    autoplayId = null;
+  };
+
+  const startAutoplay = () => {
+    stopAutoplay();
+    autoplayId = setInterval(() => goToInternal(current + 1), AUTOPLAY_MS);
+  };
+
+  const setPlaying = (playing) => {
+    isPlaying = playing;
+    playPause.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
+    playPause.setAttribute('aria-label', isPlaying ? 'Pause autoplay' : 'Play autoplay');
+    if (isPlaying) startAutoplay();
+    else stopAutoplay();
+  };
+
+  const goTo = (index) => {
+    goToInternal(index);
+    if (isPlaying) startAutoplay();
+  };
+
   dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
   prev.addEventListener('click', () => goTo(current - 1));
   next.addEventListener('click', () => goTo(current + 1));
+  playPause.addEventListener('click', () => setPlaying(!isPlaying));
 
   block.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') goTo(current - 1);
     if (e.key === 'ArrowRight') goTo(current + 1);
   });
 
-  block.append(prev, next, dotsNav);
-  goTo(0);
+  const controls = document.createElement('div');
+  controls.className = 'highlight-controls';
+  controls.append(playPause, dotsNav);
+
+  block.append(prev, next, controls);
+  goToInternal(0);
+  setPlaying(isPlaying);
 }
