@@ -16,10 +16,10 @@
   --light-color: #f8f8f8;
   --dark-color: #505050;
   --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
-  --accent-color: #0f9d8b;
-  --accent-color-light: #e3f5f2;
+  --link-color: #0078d4;
+  --link-hover-color: #106ebe;
+  --accent-color: #0078d4;
+  --accent-color-light: #eff6fc;
 
   /* radius */
   --radius-s: 6px;
