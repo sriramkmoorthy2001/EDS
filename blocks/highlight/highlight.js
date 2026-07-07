@@ -57,11 +57,11 @@ function applyHeadingAccents(heading) {
     const span = document.createElement('span');
     span.className = 'highlight-heading-accent';
     span.style.color = color;
-    try {
-      phraseRange.surroundContents(span);
-    } catch {
-      // formatting inside the phrase straddles an element boundary we can't safely wrap
-    }
+    // extractContents (unlike surroundContents) tolerates the phrase boundary
+    // falling inside another element - e.g. stray <code> tags some editors
+    // insert around text that looks like markup - by splitting/cloning as needed.
+    span.append(phraseRange.extractContents());
+    phraseRange.insertNode(span);
   });
 }
 
