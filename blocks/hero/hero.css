@@ -90,19 +90,35 @@ a.hero-btn-outline:hover {
   text-decoration: none;
 }
 
-/* ── browser mockup ── */
+.hero-media {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-m, 0 8px 24px rgb(0 0 0 / 12%));
+  display: none;
+}
+
+.hero-media picture,
+.hero-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+@media (width >= 900px) {
+  .hero-media {
+    display: block;
+  }
+}
+
+/* ── browser mockup (fallback when no image is authored) ── */
 .hero-mockup {
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
-  display: none;
-}
-
-@media (width >= 900px) {
-  .hero-mockup {
-    display: block;
-  }
+  display: block;
 }
 
 .hero-titlebar {

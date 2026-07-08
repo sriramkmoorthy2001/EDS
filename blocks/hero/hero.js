@@ -1,3 +1,5 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+
 function buildMockup() {
   const win = document.createElement('div');
   win.className = 'hero-mockup';
@@ -50,9 +52,33 @@ function buildMockup() {
 
 export default function decorate(block) {
   const rows = [...block.children];
-  const headingSource = rows[0]?.querySelector('h1,h2,h3,h4');
-  const descSource = rows[1]?.querySelector('p');
-  const linkEls = [...(rows[2]?.querySelectorAll('a[href]') || [])];
+
+  let headingSource = null;
+  let descSource = null;
+  let imgEl = null;
+  let linkEls = [];
+
+  // rows are read by content type (image / heading / links / text), not by
+  // fixed position, so authors can add an image row anywhere in the block.
+  rows.forEach((row) => {
+    const img = row.querySelector('img');
+    if (img) {
+      imgEl = img;
+      return;
+    }
+    const h = row.querySelector('h1,h2,h3,h4');
+    if (h) {
+      headingSource = h;
+      return;
+    }
+    const links = [...row.querySelectorAll('a[href]')];
+    if (links.length) {
+      linkEls = links;
+      return;
+    }
+    const p = row.querySelector('p');
+    if (p && !descSource) descSource = p;
+  });
 
   block.textContent = '';
 
@@ -86,18 +112,28 @@ export default function decorate(block) {
     textCol.append(row);
   }
 
-  const mockup = buildMockup();
+  const mediaCol = document.createElement('div');
+  mediaCol.className = 'hero-media';
+  if (imgEl) {
+    // hero media is above the fold, so load eagerly rather than lazily
+    mediaCol.append(createOptimizedPicture(imgEl.src, imgEl.alt, true, [
+      { media: '(min-width: 900px)', width: '900' },
+      { width: '600' },
+    ]));
+  } else {
+    mediaCol.append(buildMockup());
+  }
 
   const inner = document.createElement('div');
   inner.className = 'hero-inner';
-  inner.append(textCol, mockup);
+  inner.append(textCol, mediaCol);
   block.append(inner);
 
-  mockup.querySelectorAll('.hero-chip').forEach((chip) => {
+  mediaCol.querySelectorAll('.hero-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const { tag } = chip.dataset;
-      mockup.querySelectorAll('.hero-chip').forEach((c) => c.classList.toggle('on', c === chip));
-      mockup.querySelectorAll('.hero-card').forEach((card) => {
+      mediaCol.querySelectorAll('.hero-chip').forEach((c) => c.classList.toggle('on', c === chip));
+      mediaCol.querySelectorAll('.hero-card').forEach((card) => {
         card.style.display = !tag || card.dataset.tag === tag ? '' : 'none';
       });
     });
