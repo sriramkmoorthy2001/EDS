@@ -13,15 +13,27 @@
 }
 
 .highlight-slide {
-  position: relative;
-  display: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
   align-items: flex-end;
   min-height: 340px;
   background-color: #1a1a1a;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
 }
 
 .highlight-slide.is-active {
-  display: flex;
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight-slide {
+    transition: none;
+  }
 }
 
 @media (width >= 600px) {
@@ -32,7 +44,7 @@
 
 @media (width >= 900px) {
   .highlight-slide {
-    min-height: 460px;
+    min-height: 480px;
   }
 }
 
@@ -53,7 +65,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgb(255 255 255 / 85%) 0%, rgb(255 255 255 / 55%) 45%, rgb(255 255 255 / 0%) 75%);
+  background: linear-gradient(0deg, rgb(255 255 255 / 88%) 0%, rgb(255 255 255 / 58%) 42%, rgb(255 255 255 / 0%) 75%);
   pointer-events: none;
 }
 
@@ -62,61 +74,72 @@
   z-index: 1;
   box-sizing: border-box;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 40px 24px 56px;
-  color: #000;
+  padding: 40px 24px 64px;
+  color: var(--text-color, #1a1a1a);
 }
 
 @media (width >= 900px) {
   .highlight-content {
-    max-width: 640px;
+    max-width: 620px;
     margin: 0;
-    padding: 0 0 88px 64px;
+    padding: 0 0 96px 48px;
   }
 }
 
 .highlight-heading {
   margin: 0 0 16px;
-  font-size: clamp(28px, 4.2vw, 44px);
+  font-size: clamp(28px, 4.2vw, 46px);
   font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: #000;
+  letter-spacing: -0.022em;
+  color: var(--text-color, #1a1a1a);
 }
 
 .highlight-heading * {
   font-size: inherit !important;
 }
 
+.highlight-heading-accent {
+  color: var(--accent-color, #0078d4);
+}
+
 .highlight-desc {
-  margin: 0 0 24px;
+  margin: 0 0 28px;
   font-size: 17px;
-  line-height: 1.6;
-  color: rgb(0 0 0 / 85%);
+  line-height: 1.7;
+  color: var(--dark-color, #505050);
   max-width: 46ch;
 }
 
 a.highlight-cta {
   display: inline-flex;
   align-items: center;
-  border-radius: 4px;
-  background-color: #fff;
-  color: #1a1a1a;
+  border-radius: var(--radius-s, 4px);
+  background-color: var(--accent-color, #0078d4);
+  color: #fff;
+  border: 1px solid var(--accent-color, #0078d4);
   padding: 11px 24px;
   font-weight: 600;
   font-size: 15px;
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 a.highlight-cta:hover {
-  background-color: #e8e8e8;
-  color: #1a1a1a;
+  background-color: #106ebe;
+  border-color: #106ebe;
+  color: #fff;
   text-decoration: none;
 }
 
-/* carousel controls */
+a.highlight-cta:focus-visible {
+  outline: 2px solid var(--accent-color, #0078d4);
+  outline-offset: 2px;
+}
+
+/* carousel controls - fluent acrylic style */
 .highlight-arrow {
   position: absolute;
   z-index: 2;
@@ -125,15 +148,16 @@ a.highlight-cta:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 60%);
   border-radius: 50%;
-  background-color: rgb(255 255 255 / 75%);
-  color: #000;
+  background-color: rgb(255 255 255 / 70%);
+  backdrop-filter: blur(16px);
+  color: #1a1a1a;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-  transition: background-color 0.15s ease;
+  box-shadow: var(--shadow-s, 0 1px 4px rgb(0 0 0 / 8%));
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .highlight-arrow svg {
@@ -141,10 +165,14 @@ a.highlight-cta:hover {
   height: 20px;
 }
 
-.highlight-arrow:hover,
+.highlight-arrow:hover {
+  background-color: rgb(255 255 255 / 92%);
+  transform: translateY(-50%) scale(1.05);
+}
+
 .highlight-arrow:focus-visible {
-  background-color: rgb(255 255 255 / 95%);
-  outline: none;
+  outline: 2px solid var(--accent-color, #0078d4);
+  outline-offset: 2px;
 }
 
 .highlight-arrow-prev { left: 16px; }
@@ -158,17 +186,23 @@ a.highlight-cta:hover {
 .highlight-controls {
   position: absolute;
   z-index: 2;
-  left: 0;
-  right: 0;
+  left: 50%;
   bottom: 20px;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 14px;
+  padding: 8px 10px 8px 8px;
+  border-radius: 999px;
+  background-color: rgb(255 255 255 / 65%);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-s, 0 1px 4px rgb(0 0 0 / 8%));
 }
 
 @media (width >= 900px) {
   .highlight-controls {
+    left: 48px;
+    transform: none;
     bottom: 32px;
   }
 }
@@ -181,11 +215,10 @@ a.highlight-cta:hover {
   height: 28px;
   border: none;
   border-radius: 50%;
-  background-color: rgb(255 255 255 / 75%);
-  color: #000;
+  background-color: transparent;
+  color: #1a1a1a;
   cursor: pointer;
   padding: 0;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
   transition: background-color 0.15s ease;
 }
 
@@ -194,10 +227,13 @@ a.highlight-cta:hover {
   height: 14px;
 }
 
-.highlight-playpause:hover,
+.highlight-playpause:hover {
+  background-color: rgb(0 0 0 / 8%);
+}
+
 .highlight-playpause:focus-visible {
-  background-color: rgb(255 255 255 / 95%);
-  outline: none;
+  outline: 2px solid var(--accent-color, #0078d4);
+  outline-offset: 2px;
 }
 
 .highlight-dots {
@@ -223,7 +259,12 @@ a.highlight-cta:hover {
 
 .highlight-dot.is-active {
   width: 22px;
-  background-color: #000;
+  background-color: var(--accent-color, #0078d4);
+}
+
+.highlight-dot:focus-visible {
+  outline: 2px solid var(--accent-color, #0078d4);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
