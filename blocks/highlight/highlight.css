@@ -139,50 +139,7 @@ a.highlight-cta:focus-visible {
   outline-offset: 2px;
 }
 
-/* carousel controls - fluent acrylic style */
-.highlight-arrow {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgb(255 255 255 / 60%);
-  border-radius: 50%;
-  background-color: rgb(255 255 255 / 70%);
-  backdrop-filter: blur(16px);
-  color: #1a1a1a;
-  cursor: pointer;
-  box-shadow: var(--shadow-s, 0 1px 4px rgb(0 0 0 / 8%));
-  transition: background-color 0.15s ease, transform 0.15s ease;
-}
-
-.highlight-arrow svg {
-  width: 20px;
-  height: 20px;
-}
-
-.highlight-arrow:hover {
-  background-color: rgb(255 255 255 / 92%);
-  transform: translateY(-50%) scale(1.05);
-}
-
-.highlight-arrow:focus-visible {
-  outline: 2px solid var(--accent-color, #0078d4);
-  outline-offset: 2px;
-}
-
-.highlight-arrow-prev { left: 16px; }
-.highlight-arrow-next { right: 16px; }
-
-@media (width >= 900px) {
-  .highlight-arrow-prev { left: 24px; }
-  .highlight-arrow-next { right: 24px; }
-}
-
+/* carousel controls - centered bottom bar */
 .highlight-controls {
   position: absolute;
   z-index: 2;
@@ -191,20 +148,45 @@ a.highlight-cta:focus-visible {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 8px 10px 8px 8px;
-  border-radius: 999px;
-  background-color: rgb(255 255 255 / 65%);
-  backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-s, 0 1px 4px rgb(0 0 0 / 8%));
+  gap: 12px;
 }
 
 @media (width >= 900px) {
   .highlight-controls {
-    left: 48px;
-    transform: none;
     bottom: 32px;
   }
+}
+
+.highlight-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 70%);
+  backdrop-filter: blur(16px);
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: var(--shadow-s, 0 1px 4px rgb(0 0 0 / 8%));
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.highlight-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.highlight-arrow:hover {
+  background-color: rgb(255 255 255 / 92%);
+  transform: scale(1.05);
+}
+
+.highlight-arrow:focus-visible {
+  outline: 2px solid var(--accent-color, #0078d4);
+  outline-offset: 2px;
 }
 
 .highlight-playpause {
