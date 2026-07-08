@@ -83,7 +83,7 @@ function buildSlide(row) {
   slide.append(media);
 
   const content = document.createElement('div');
-  content.className = 'highlight-content';
+  content.className = 'highlight-card';
 
   const heading = contentCell?.querySelector('h1, h2, h3, h4, h5, h6');
   if (heading) {
@@ -137,15 +137,18 @@ export default function decorate(block) {
   let autoplayId = null;
   let isPlaying = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const dotsNav = document.createElement('div');
-  dotsNav.className = 'highlight-dots';
-  const dots = slides.map((_, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'highlight-dot';
-    dot.setAttribute('aria-label', `Show slide ${i + 1} of ${slides.length}`);
-    dotsNav.append(dot);
-    return dot;
+  const progressNav = document.createElement('div');
+  progressNav.className = 'highlight-progress';
+  const segments = slides.map((_, i) => {
+    const segment = document.createElement('button');
+    segment.type = 'button';
+    segment.className = 'highlight-progress-segment';
+    segment.setAttribute('aria-label', `Show slide ${i + 1} of ${slides.length}`);
+    const fill = document.createElement('span');
+    fill.className = 'highlight-progress-fill';
+    segment.append(fill);
+    progressNav.append(segment);
+    return { segment, fill };
   });
 
   const prev = document.createElement('button');
@@ -164,13 +167,29 @@ export default function decorate(block) {
   playPause.type = 'button';
   playPause.className = 'highlight-playpause';
 
+  const counter = document.createElement('span');
+  counter.className = 'highlight-counter';
+
+  const setFill = (fill, width, animated) => {
+    fill.style.transition = animated ? `width ${AUTOPLAY_MS}ms linear` : 'none';
+    fill.style.width = width;
+  };
+
   const goToInternal = (index) => {
     current = (index + slides.length) % slides.length;
     slides.forEach((slide, i) => {
       slide.classList.toggle('is-active', i === current);
       slide.setAttribute('aria-hidden', i === current ? 'false' : 'true');
     });
-    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+    segments.forEach(({ segment, fill }, i) => {
+      segment.classList.toggle('is-active', i === current);
+      if (i < current) {
+        setFill(fill, '100%', false);
+      } else if (i > current) {
+        setFill(fill, '0%', false);
+      }
+    });
+    counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
   };
 
   const stopAutoplay = () => {
@@ -180,6 +199,9 @@ export default function decorate(block) {
 
   const startAutoplay = () => {
     stopAutoplay();
+    const { fill } = segments[current];
+    setFill(fill, '0%', false);
+    requestAnimationFrame(() => setFill(fill, '100%', true));
     autoplayId = setInterval(() => goToInternal(current + 1), AUTOPLAY_MS);
   };
 
@@ -187,16 +209,23 @@ export default function decorate(block) {
     isPlaying = playing;
     playPause.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
     playPause.setAttribute('aria-label', isPlaying ? 'Pause autoplay' : 'Play autoplay');
-    if (isPlaying) startAutoplay();
-    else stopAutoplay();
+    if (isPlaying) {
+      startAutoplay();
+    } else {
+      stopAutoplay();
+      const { fill } = segments[current];
+      const computedWidth = getComputedStyle(fill).width;
+      setFill(fill, computedWidth, false);
+    }
   };
 
   const goTo = (index) => {
     goToInternal(index);
     if (isPlaying) startAutoplay();
+    else setFill(segments[current].fill, '0%', false);
   };
 
-  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+  segments.forEach(({ segment }, i) => segment.addEventListener('click', () => goTo(i)));
   prev.addEventListener('click', () => goTo(current - 1));
   next.addEventListener('click', () => goTo(current + 1));
   playPause.addEventListener('click', () => setPlaying(!isPlaying));
@@ -206,11 +235,15 @@ export default function decorate(block) {
     if (e.key === 'ArrowRight') goTo(current + 1);
   });
 
-  const controls = document.createElement('div');
-  controls.className = 'highlight-controls';
-  controls.append(playPause, dotsNav);
+  const meta = document.createElement('div');
+  meta.className = 'highlight-meta';
+  meta.append(playPause, counter);
 
-  block.append(prev, next, controls);
+  const topbar = document.createElement('div');
+  topbar.className = 'highlight-topbar';
+  topbar.append(progressNav, meta);
+
+  track.append(topbar, prev, next);
   goToInternal(0);
   setPlaying(isPlaying);
 }
