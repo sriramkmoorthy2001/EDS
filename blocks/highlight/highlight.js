@@ -208,9 +208,9 @@ export default function decorate(block) {
 
   const controls = document.createElement('div');
   controls.className = 'highlight-controls';
-  controls.append(prev, playPause, dotsNav, next);
+  controls.append(playPause, dotsNav);
 
-  block.append(controls);
+  block.append(prev, next, controls);
   goToInternal(0);
   setPlaying(isPlaying);
 }

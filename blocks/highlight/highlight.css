@@ -76,15 +76,15 @@
   width: 100%;
   max-width: 1160px;
   margin: 0 auto;
-  padding: 40px 24px 64px;
+  padding: 40px 68px 64px;
   color: var(--text-color, #1a1a1a);
 }
 
 @media (width >= 900px) {
   .highlight-content {
-    max-width: 620px;
+    max-width: 660px;
     margin: 0;
-    padding: 0 0 96px 48px;
+    padding: 0 0 96px 88px;
   }
 }
 
@@ -158,6 +158,10 @@ a.highlight-cta:focus-visible {
 }
 
 .highlight-arrow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,12 +185,20 @@ a.highlight-cta:focus-visible {
 
 .highlight-arrow:hover {
   background-color: rgb(255 255 255 / 92%);
-  transform: scale(1.05);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .highlight-arrow:focus-visible {
   outline: 2px solid var(--accent-color, #0078d4);
   outline-offset: 2px;
+}
+
+.highlight-arrow-prev { left: 16px; }
+.highlight-arrow-next { right: 16px; }
+
+@media (width >= 900px) {
+  .highlight-arrow-prev { left: 24px; }
+  .highlight-arrow-next { right: 24px; }
 }
 
 .highlight-playpause {
