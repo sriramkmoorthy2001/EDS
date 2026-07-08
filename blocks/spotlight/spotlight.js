@@ -1,3 +1,5 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+
 function observeRise(root) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
@@ -64,14 +66,46 @@ function buildMockup() {
 
 export default function decorate(block) {
   const rows = [...block.children];
-  const heading = rows[0]?.querySelector('h1,h2,h3,h4')?.textContent.trim() || rows[0]?.textContent.trim();
-  const desc = rows[1]?.textContent.trim();
-  // row 2 is pills (ignored), row 3 is CTA
-  const ctaLink = rows[3]?.querySelector('a[href]') || rows[2]?.querySelector('a[href]');
+
+  let heading = '';
+  let desc = '';
+  let imgEl = null;
+  let ctaLink = null;
+
+  // rows are read by content type (heading / image / link-only / text), not
+  // by fixed position, so authors can add an image row anywhere in the block.
+  rows.forEach((row) => {
+    const img = row.querySelector('img');
+    const h = row.querySelector('h1,h2,h3,h4');
+    if (img) {
+      imgEl = img;
+      return;
+    }
+    if (h) {
+      heading = h.textContent.trim();
+      return;
+    }
+    const link = row.querySelector('a[href]');
+    if (link && row.textContent.trim() === link.textContent.trim()) {
+      ctaLink = link;
+      return;
+    }
+    const text = row.textContent.trim();
+    if (text) desc = desc ? `${desc} ${text}` : text;
+  });
 
   block.textContent = '';
 
-  const mockup = buildMockup();
+  const mediaCol = document.createElement('div');
+  mediaCol.className = 'spotlight-media';
+  if (imgEl) {
+    mediaCol.append(createOptimizedPicture(imgEl.src, imgEl.alt, false, [
+      { media: '(min-width: 900px)', width: '900' },
+      { width: '600' },
+    ]));
+  } else {
+    mediaCol.append(buildMockup());
+  }
 
   const textCol = document.createElement('div');
   textCol.className = 'spotlight-text';
@@ -82,14 +116,14 @@ export default function decorate(block) {
 
   const inner = document.createElement('div');
   inner.className = 'spotlight-inner rise';
-  inner.append(mockup, textCol);
+  inner.append(mediaCol, textCol);
   block.append(inner);
 
-  mockup.querySelectorAll('.spotlight-chip').forEach((chip) => {
+  mediaCol.querySelectorAll('.spotlight-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const { tag } = chip.dataset;
-      mockup.querySelectorAll('.spotlight-chip').forEach((c) => c.classList.toggle('on', c === chip));
-      mockup.querySelectorAll('.spotlight-card').forEach((card) => {
+      mediaCol.querySelectorAll('.spotlight-chip').forEach((c) => c.classList.toggle('on', c === chip));
+      mediaCol.querySelectorAll('.spotlight-card').forEach((card) => {
         card.style.display = !tag || card.dataset.tag === tag ? '' : 'none';
       });
     });
